@@ -22,6 +22,10 @@ Ensure that you have sane values for the following environment variables:
     SERVER_URL
     SESSION_SECRET
 
+*RUN THE TESTS*
+
+    make test
+
 To run the server, run
 
     node app.js

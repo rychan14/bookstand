@@ -1,9 +1,29 @@
-REQUIRED_FILES=app.js
+build: updateDependencies resetDB installMocha
+.PHONY: build test updateDependencies resetDB
 
-build: $(REQUIRED_FILES) updateDependencies resetDB
+installMocha: .tmp.mocha
 
-updateDependencies: package.json
+updateDependencies: .tmp.updeps
+
+resetDB: .tmp.resetdb
+
+.tmp.mocha:
+	npm -g install mocha
+	@touch .tmp.mocha
+
+.tmp.updeps: package.json
 	npm install
+	@touch .tmp.updeps
 
-resetDB: meta/schema.sql
+.tmp.resetdb: meta/schema.sql
 	psql -f meta/schema.sql
+	@touch .tmp.resetdb
+
+test: test/test.js
+	mocha
+
+clean:
+	rm -rf node_modules
+	rm .tmp.mocha
+	rm .tmp.updeps
+	rm .tmp.resetdb

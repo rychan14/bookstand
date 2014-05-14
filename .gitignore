@@ -5,3 +5,4 @@ meta/db_diagram
 meta/gen_diagrams.sh
 meta/out
 *.jar
+*.tmp*

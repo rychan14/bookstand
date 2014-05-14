@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "express": "3.x",
+    "mocha": "latest",
     "mustache-express": "latest",
     "passport": ">= 0.0.0",
-    "passport-facebook": "latest"
+    "passport-facebook": "latest",
+    "should": "latest",
+    "zombie": "latest"
   }
 }
