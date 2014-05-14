@@ -1,0 +1,7 @@
+config.fish
+node_modules
+meta/architecture_diagram*
+meta/db_diagram
+meta/gen_diagrams.sh
+meta/out
+*.jar

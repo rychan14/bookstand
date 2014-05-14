@@ -1,0 +1,12 @@
+- Do FB Authentication
+  - User Account Creation
+    - Password Hashing
+    - Book Request Create
+      - Upload to FB
+  - FB Data Receive
+    - FB Data Parse
+  - Private Message API
+
+- Testing Suite
+- Setup Remote Deploy
+- Book data scraping
