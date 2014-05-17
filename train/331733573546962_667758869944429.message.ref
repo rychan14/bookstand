@@ -1,0 +1,38 @@
+[
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": "principle of economics",
+        "course_number": "Econ 123",
+        "isbn": null,
+        "price": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": "Microeconomics",
+        "course_number": "ECON 100ABC",
+        "isbn": null,
+        "price": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": "Intro to Criminology",
+        "course_number": "Psyc 164",
+        "isbn": null,
+        "price": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": null,
+        "course_number": "CSE 3",
+        "isbn": null,
+        "price": null,
+        "title": null
+    }
+]

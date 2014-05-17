@@ -1,0 +1,20 @@
+[
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": null,
+        "course_number": null,
+        "isbn": null,
+        "price": null,
+        "title": "Craft of Research"
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": null,
+        "course_number": "MCWP 125",
+        "isbn": null,
+        "price": null,
+        "title": null
+    }
+]

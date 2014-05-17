@@ -1,0 +1,20 @@
+[
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": null,
+        "course_number": "CHEM 7L",
+        "isbn": null,
+        "price": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "course_name": null,
+        "course_number": "MMW 14",
+        "isbn": null,
+        "price": null,
+        "title": null
+    }
+]
