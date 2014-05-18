@@ -2,37 +2,49 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "SOCI 1",
+        "edition": 2,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": null
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "SOCI 2",
+        "edition": null,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": null
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "SIO 15",
+        "edition": null,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": null
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "MUS13AF",
+        "edition": null,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": null
     }
 ]

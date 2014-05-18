@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": "Econ 1-3",
+        "course_number": null,
+        "edition": 4,
+        "isbn": null,
+        "price": 40.0,
+        "professor": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": "Econ 1-3",
+        "course_number": null,
+        "edition": 5,
+        "isbn": null,
+        "price": 40.0,
+        "professor": null,
+        "title": null
+    }
+]

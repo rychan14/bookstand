@@ -20,20 +20,26 @@ def main():
         is_post = get_valid_input("Is actually a post (y/n): ", parse_yn)
         if is_post:
             num_books = get_valid_input("How many books buying / selling: ", parse_positive_int)
-            books = [get_book_data(i) for i in range(num_books)]
+            books = [get_book_data(i, message) for i in range(num_books)]
         else:
             books = []
         write_ref_file(books, filename  + '.ref')
 
-def get_book_data(i):
+def get_book_data(i, message):
+    if (i > 0):
+        print("\n\n%s\n---------\n" % message)
+
     print("\nEnter data for book %s:" % (i+1))
     book = {}
     book['buysell']       = get_valid_input("[b]uy or [s]ell: ", parse_buysell)
     book['title']         = input("Book Title (blank for none): ") or None
     book['author']        = input("Book Author (blank for none): ") or None
+    book['edition']       = get_valid_input("Edition: ", parse_maybe_positive_int)
     book['isbn']          = get_valid_input("Book ISBN (blank for none): ", parse_maybe_isbn)
-    book['course_name']   = input("Course Name (blank for none): ") or None
+    book['condition']     = input("Book condition(blank for none): ") or None
     book['course_number'] = input("Course Number (blank for none): ") or None
+    book['course_name']   = input("Course Name (blank for none): ") or None
+    book['professor']     = input("Professor (blank for none): ") or None
     book['price']         = get_valid_input("Price: (blank for none): ", parse_maybe_price)
     return book
 
@@ -67,6 +73,18 @@ def parse_buysell(resp):
     elif r == 's' or r == 'sell':
         return "sell", True
     else:
+        return None, False
+
+def parse_maybe_positive_int(resp):
+    if not resp:
+        return None, True
+    try:
+        i = int(resp)
+        if i > 0:
+            return i, True
+        else:
+            return None, False
+    except ValueError:
         return None, False
 
 def parse_positive_int(resp):

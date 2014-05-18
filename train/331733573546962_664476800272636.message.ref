@@ -2,19 +2,25 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
-        "course_number": "CHEM 7L",
+        "course_number": "Chem 7L",
+        "edition": null,
         "isbn": null,
         "price": null,
-        "title": null
+        "professor": null,
+        "title": "Lab Manual"
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "MMW 14",
+        "edition": null,
         "isbn": null,
         "price": null,
-        "title": null
+        "professor": "Steven Cassedy",
+        "title": "Reader"
     }
 ]

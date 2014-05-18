@@ -2,10 +2,13 @@
     {
         "author": null,
         "buysell": "buy",
-        "course_name": null,
+        "condition": null,
+        "course_name": "Ochem",
         "course_number": null,
+        "edition": 6,
         "isbn": null,
         "price": null,
-        "title": "Ochem 6th edition textbook and solution manual"
+        "professor": null,
+        "title": null
     }
 ]

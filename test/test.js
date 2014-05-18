@@ -1,9 +1,12 @@
 /* jshint -W030 */ 
+var brain   = require('../brain');
 var app     = require('../server').app;
 var util    = require('../util');
 var book    = require('../facebook');
 var should  = require('should');
 var Browser = require('zombie');
+var glob    = require('glob');
+var fs      = require('fs');
 
 describe('util', function(){
   describe('#getVar()', function(){
@@ -54,6 +57,43 @@ describe('/auth/facebook', function(){
 
 });
 
+describe('brain', function(){
+
+  it("can figure out what are buys", function(done) {
+    glob("test/testData/buysell/buy*", function(er, files){
+      files.length.should.be.above(0);
+      files.forEach(function(file){
+        var message = fs.readFileSync(file);
+        brain.classifyBuySell(message)[0].should.equal('buy');
+      });
+      done();
+    });
+  });
+
+  it("can figure out what are sells", function(done) {
+    glob("test/testData/buysell/sell*", function(er, files){
+      files.length.should.be.above(0);
+      files.forEach(function(file){
+        var message = fs.readFileSync(file);
+        brain.classifyBuySell(message)[0].should.equal('sell');
+      });
+      done();
+    });
+  });
+
+  it("can figure out what are not buys or sells", function(done) {
+    glob("test/testData/buysell/notbuysell*", function(er, files){
+      files.length.should.be.above(0);
+      files.forEach(function(file){
+        var message = fs.readFileSync(file);
+        should(brain.classifyBuySell(message)).not.be.ok;
+      });
+      done();
+    });
+  });
+
+});
+
 describe('facebook', function(){
 
   before(function(){
@@ -69,7 +109,7 @@ describe('facebook', function(){
       done();
     });
   });
-    
+
   it("should access 0 group posts", function(done){
     this.timeout(25);
     book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){

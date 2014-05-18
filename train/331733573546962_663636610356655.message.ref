@@ -2,10 +2,13 @@
     {
         "author": null,
         "buysell": "buy",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": 2,
         "isbn": "9780821847916",
         "price": null,
-        "title": "Advanced Calculus, 2 Edition,"
+        "professor": null,
+        "title": "Advanced Calculus"
     }
 ]

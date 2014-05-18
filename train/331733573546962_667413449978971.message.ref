@@ -2,19 +2,25 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": 3,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": "Craft of Research"
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "MCWP 125",
+        "edition": null,
         "isbn": null,
         "price": null,
-        "title": null
+        "professor": "Eun Jung Park",
+        "title": "Reader"
     }
 ]

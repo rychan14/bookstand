@@ -2,10 +2,13 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": null,
         "isbn": null,
         "price": 90.0,
+        "professor": null,
         "title": null
     }
 ]

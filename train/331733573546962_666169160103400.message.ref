@@ -2,10 +2,13 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": "COGS 11",
+        "edition": null,
         "isbn": null,
         "price": 50.0,
-        "title": null
+        "professor": "Mary Boyle",
+        "title": "reader"
     }
 ]

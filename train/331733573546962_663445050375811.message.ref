@@ -2,19 +2,25 @@
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": 5,
         "isbn": "9781133110279",
         "price": null,
-        "title": "Principles Of Physics Vol 1, 5 Edition"
+        "professor": null,
+        "title": "Principles Of Physics Vol 1"
     },
     {
         "author": null,
         "buysell": "sell",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": null,
         "isbn": null,
         "price": null,
+        "professor": null,
         "title": "The Norton Anthology of Drama Volume 1"
     }
 ]

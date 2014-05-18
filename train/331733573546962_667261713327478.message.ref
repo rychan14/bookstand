@@ -2,10 +2,13 @@
     {
         "author": "Young",
         "buysell": "buy",
+        "condition": null,
         "course_name": null,
         "course_number": null,
+        "edition": 5,
         "isbn": "9780470596791",
         "price": null,
-        "title": "Brief Intro To Fluid Mechanics, 5 Edition"
+        "professor": null,
+        "title": "Brief Intro To Fluid Mechanics"
     }
 ]
