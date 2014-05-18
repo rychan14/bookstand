@@ -10,13 +10,16 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "colors": "0.6.2",
     "express": "3.x",
     "fb": "0.7.0",
+    "glob": "3.*",
     "mocha": "1.*",
     "mustache-express": "1.*",
     "passport": "0.2.0",
     "passport-facebook": "1.*",
     "should": "3.*",
+    "underscore": "1.*",
     "zombie": "2.*"
   }
 }
