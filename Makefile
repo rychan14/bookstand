@@ -20,7 +20,7 @@ resetDB: .tmp.resetdb
 	@touch .tmp.resetdb
 
 test: test/test.js
-	mocha
+	mocha --reporter=nyan
 
 clean:
 	rm -rf node_modules
