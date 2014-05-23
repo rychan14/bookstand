@@ -150,6 +150,21 @@ describe('brain', function(){
     });
   });
 
+  it("can recognize non-authors", function(done) {
+    runForFiles("test/testData/author/noauthor*", done, function(message){
+        brain.extractAuthors(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract authors", function(done) {
+    var key = JSON.parse(fs.readFileSync('test/testData/author/key.json'));
+    runForFiles("test/testData/author/author*", done, function(message, filename){
+        var authors = brain.extractAuthors(message);
+        var ref = key[filename.split("/").pop()];
+        authors.should.eql(ref);
+    });
+  });
+
 });
 
 describe('facebook', function(){

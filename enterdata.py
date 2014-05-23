@@ -1,12 +1,14 @@
 from os.path import isfile
 from glob import glob
 import platform
+import os
 import re
 import json
 
 def is_python_3():
     major, _, _ = platform.python_version_tuple()
     return major == '3'
+
 assert(is_python_3)
 
 
@@ -21,9 +23,13 @@ def main():
         if is_post:
             num_books = get_valid_input("How many books buying / selling: ", parse_positive_int)
             books = [get_book_data(i, message) for i in range(num_books)]
+            write_ref_file(books, filename  + '.ref')
         else:
-            books = []
-        write_ref_file(books, filename  + '.ref')
+            should_delete = get_valid_input("Delete this file(y/n): ", parse_yn)
+            if should_delete:
+                os.remove(filename)
+            else:
+                write_ref_file([], filename  + '.ref')
 
 def get_book_data(i, message):
     if (i > 0):
@@ -117,6 +123,6 @@ def parse_maybe_price(resp):
             return None, False
     except ValueError:
         return None, False
-    
+
 if __name__ == '__main__':
     main()
