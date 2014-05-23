@@ -165,6 +165,21 @@ describe('brain', function(){
     });
   });
 
+  it("can recognize non-courses", function(done) {
+    runForFiles("test/testData/course/nocourse*", done, function(message){
+        brain.extractCourseNumbers(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract courses", function(done) {
+    var key = JSON.parse(fs.readFileSync('test/testData/course/key.json'));
+    runForFiles("test/testData/course/course*", done, function(message, filename){
+        var courses = brain.extractCourseNumbers(message);
+        var ref = key[filename.split("/").pop()];
+        courses.should.eql(ref);
+    });
+  });
+
 });
 
 describe('facebook', function(){

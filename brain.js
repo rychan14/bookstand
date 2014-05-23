@@ -9,6 +9,8 @@ var util   = require('util');
 var fbGroupId = getVar('TEXTBOOK_GRP_ID');
 var fbToken   = getVar('TEST_TOKEN');
 
+var deptAcronyms = JSON.parse(fs.readFileSync('./data/dept_acronyms')).depts;
+
 var fields = ['author',
               'buysell',
               'condition',
@@ -51,8 +53,8 @@ function extractEditions(post) {
 
 function extractTitles(post) {
   // It would be better to use a Markov model probably, this is just a hack
-  var titleRegex  = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
-  var titleRegex2 = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z0-9 ]*) (by|for) [a-zA-Z]{2}.*/ig;
+  var titleRegex  = /(^(a-z))*([a-z]+[a-z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
+  var titleRegex2 = /(^(a-z))*([a-z]+[\w ]*) (by|for) [a-z]{2}.*/ig;
   var results = [];
   var t;
   while ( (t = titleRegex.exec(post)) !== null){
@@ -65,18 +67,17 @@ function extractTitles(post) {
 }
 
 function extractAuthors(post) {
-  console.log(post);
-  var authorRegex = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z0-9, ]*) by ([a-zA-Z]{2}[a-z\. ]*)/ig;
+  var authorRegex = /(^(a-z))*([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
   var results = [];
   while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
   return results;
 }
 
-function extractCourse(post) {
-  console.log(post);
-  var authorRegex = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z0-9, ]*) for ([a-zA-Z]{2}[a-z\. ]*)/ig;
+function extractCourseNumbers(post) {
+  var deptRegex =
+    new RegExp('\\b((' + deptAcronyms.join("|") + ')( )?\\d{1,3}[a-z]{0,3})', 'ig');
   var results = [];
-  while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
+  while ( (t = deptRegex.exec(post)) !== null) results.push(t[0]);
   return results;
 }
 
@@ -228,13 +229,14 @@ function generateTestData(num_posts){
 }
 
 module.exports = {
-  'classifyBuySell'  : classifyBuySell,
-  'classifyPost'     : classifyPostFromText,
-  'extractISBNs'     : extractISBNs,
-  'extractEditions'  : extractEditions,
-  'extractPrices'    : extractPrices,
-  'extractTitles'    : extractTitles,
-  'extractAuthors'   : extractAuthors,
-  'generateTestData' : generateTestData,
-  'testClassifier'   : testClassifier
+  'classifyBuySell'      : classifyBuySell,
+  'classifyPost'         : classifyPostFromText,
+  'extractISBNs'         : extractISBNs,
+  'extractEditions'      : extractEditions,
+  'extractPrices'        : extractPrices,
+  'extractTitles'        : extractTitles,
+  'extractAuthors'       : extractAuthors,
+  'extractCourseNumbers' : extractCourseNumbers,
+  'generateTestData'     : generateTestData,
+  'testClassifier'       : testClassifier
 };
