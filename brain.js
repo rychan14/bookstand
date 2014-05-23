@@ -39,17 +39,34 @@ function extractISBNs(post) {
   return post.match(isbnRegex) || [];
 }
 
-function extractEdition(post) {
-  var editionRegex = /\d+(st|nd|rd|th)?( )*edition/ig;
-  return post.match(editionRegex) || [];
+function extractEditions(post) {
+  var editionRegex = /(\d+)(st|nd|rd|th)?( )*edition/ig;
+  var results = [];
+  var t;
+  while ( (t = editionRegex.exec(post)) !== null){
+    results.push(t[1]);
+  }
+  return results;
 }
 
+function extractPrices(post) {
+  var priceRegex = /\$((\d+)(\.\d*)?)/g;
+  var results = [];
+  var t;
+  while ( (t = priceRegex.exec(post)) !== null){
+    results.push(t[1]);
+  }
+  return results;
+}
 
 function classifyPostFromText(post){
   var bs = classifyBuySell(post);
   if (!bs) return [];
-  var buysell = bs[0];
-  var isbns = extractISBNs(post);
+
+  var buysell  = bs[0];
+  var isbns    = extractISBNs(post);
+  var editions = extractEditions(post);
+
   if (isbns.length > 0) {
     return _.map(isbns, function(isbn){
       return {"isbn": isbn, "buysell": buysell};
@@ -60,10 +77,10 @@ function classifyPostFromText(post){
 }
 
 function compareTokens(classBooks, referenceBooks){
-  classTokens = [];
+  classTokens     = [];
   referenceTokens = [];
-  extraTokens = [];
-  matched = [];
+  extraTokens     = [];
+  matched         = [];
   fields.forEach(function(field){
     classBooks.forEach(function(book){
       if (field in book){
@@ -86,9 +103,9 @@ function compareTokens(classBooks, referenceBooks){
     }
   });
   return {
-    "matched": matched,
-    "classnExtra": extraTokens,
-    "classnMissed": referenceTokens
+    "matched"      : matched,
+    "classnExtra"  : extraTokens,
+    "classnMissed" : referenceTokens
   };
 }
 
@@ -124,9 +141,9 @@ function grade(classns, refs) {
 }
 
 function isGood(gradeResults) {
-  return gradeResults.classnExtra.length === 0 &&
+  return gradeResults.classnExtra.length  === 0 &&
          gradeResults.classnMissed.length === 0 &&
-         gradeResults.difference === 0;
+         gradeResults.difference          === 0;
 }
 
 function testClassifier(){
@@ -139,7 +156,7 @@ function testClassifier(){
       if (!fs.existsSync(ref)){
         console.log("Manual classification for " + file + " has not been performed.");
       } else {
-        var message        = fs.readFileSync(file);
+        var message        = fs.readFileSync(file).toString();
         var classification = classifyPostFromText(message);
         var reference      = JSON.parse(fs.readFileSync(ref));
         console.log("For " + colors.blue(file) + ": " );
@@ -183,6 +200,8 @@ module.exports = {
   'classifyBuySell'  : classifyBuySell,
   'classifyPost'     : classifyPostFromText,
   'extractISBNs'     : extractISBNs,
+  'extractEditions'  : extractEditions,
+  'extractPrices'    : extractPrices,
   'generateTestData' : generateTestData,
   'testClassifier'   : testClassifier
 };

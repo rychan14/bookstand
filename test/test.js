@@ -93,13 +93,45 @@ describe('brain', function(){
     });
   });
 
-  it("can recognize ISBNS", function(done) {
+  it("can extract ISBNS", function(done) {
     runForFiles("test/testData/isbn/isbn*", done, function(message, filename){
         var isbn = brain.extractISBNs(message);
         var r = /test\/testData\/isbn\/isbn(\d+)/;
-        var m = r.exec(filename);
+        var m = filename.match(r);
         isbn.length.should.equal(1);
         isbn[0].should.equal(m[1]);
+    });
+  });
+
+  it("can recognize non-editions", function(done) {
+    runForFiles("test/testData/edition/noedition*", done, function(message){
+        brain.extractEditions(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract editions", function(done) {
+    runForFiles("test/testData/edition/edition*", done, function(message, filename){
+        var editions = brain.extractEditions(message);
+        var r = /test\/testData\/edition\/edition(\d+)/;
+        var m = filename.match(r);
+        editions.length.should.equal(1);
+        editions[0].should.equal(m[1]);
+    });
+  });
+
+  it("can recognize non-prices", function(done) {
+    runForFiles("test/testData/price/noprice*", done, function(message){
+        brain.extractPrices(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract prices", function(done) {
+    runForFiles("test/testData/price/price*", done, function(message, filename){
+        var prices = brain.extractPrices(message);
+        var r = /test\/testData\/price\/price(\d+)/;
+        var m = filename.match(r);
+        prices.length.should.equal(1);
+        prices[0].should.equal(m[1]);
     });
   });
 
