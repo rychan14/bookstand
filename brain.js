@@ -36,68 +36,6 @@ function classifyBuySell(post){
   return null;
 }
 
-function extractISBNs(post) {
-  var isbnRegex = /\b((?:97[89])?\d{9}[\dx])\b/ig;
-  return post.match(isbnRegex) || [];
-}
-
-function extractEditions(post) {
-  var editionRegex = /(\d+)(st|nd|rd|th)?( )*edition/ig;
-  var results = [];
-  var t;
-  while ( (t = editionRegex.exec(post)) !== null){
-    results.push(t[1]);
-  }
-  return results;
-}
-
-function extractTitles(post) {
-  // It would be better to use a Markov model probably, this is just a hack
-  var titleRegex  = /(^(a-z))*([a-z]+[a-z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
-  var titleRegex2 = /(^(a-z))*([a-z]+[\w ]*) (by|for) [a-z]{2}.*/ig;
-  var results = [];
-  var t;
-  while ( (t = titleRegex.exec(post)) !== null){
-    results.push(t[3].trim());
-  }
-  while ( (t = titleRegex2.exec(post)) !== null){
-    results.push(t[3].trim());
-  }
-  return results;
-}
-
-function extractAuthors(post) {
-  var authorRegex = /(^(a-z))*([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
-  var results = [];
-  while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
-  return results;
-}
-
-function extractCourseNumbers(post) {
-  var deptRegex =
-    new RegExp('\\b((' + deptAcronyms.join("|") + ')( )?\\d{1,3}[a-z]{0,3})', 'ig');
-  var results = [];
-  while ( (t = deptRegex.exec(post)) !== null) results.push(t[0]);
-  return results;
-}
-
-function extractProfessors(post) {
-  var professorRegex = /(^(a-z))*([a-z]+[\w, ]*) for ([a-z]{2}[a-z\. ]*)/ig;
-  var results = [];
-  while ( (t = professorRegex.exec(post)) !== null) results.push(t[4].trim());
-  return results;
-}
-
-function extractPrices(post) {
-  var priceRegex = /\$((\d+)(\.\d*)?)/g;
-  var results = [];
-  var t;
-  while ( (t = priceRegex.exec(post)) !== null){
-    results.push(t[1]);
-  }
-  return results;
-}
-
 function classifyPostFromText(post){
   var bs = classifyBuySell(post);
   if (!bs) return [];
@@ -114,6 +52,75 @@ function classifyPostFromText(post){
     return [{"buysell": buysell}];
   }
 }
+
+
+
+function extractAuthors(post) {
+  var authorRegex = /(^(a-z))*([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
+  var results = [];
+  while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
+  return results;
+}
+
+function extractCourseNumbers(post) {
+  var deptRegex =
+    new RegExp('\\b((' + deptAcronyms.join("|") + ')( )?\\d{1,3}[a-z]{0,3})', 'ig');
+  var results = [];
+  while ( (t = deptRegex.exec(post)) !== null) results.push(t[0]);
+  return results;
+}
+
+function extractEditions(post) {
+  var editionRegex = /(\d+)(st|nd|rd|th)?( )*edition/ig;
+  var results = [];
+  var t;
+  while ( (t = editionRegex.exec(post)) !== null){
+    results.push(t[1]);
+  }
+  return results;
+}
+
+function extractISBNs(post) {
+  var isbnRegex = /\b((?:97[89])?\d{9}[\dx])\b/ig;
+  return post.match(isbnRegex) || [];
+}
+
+function extractPrices(post) {
+  var priceRegex = /\$((\d+)(\.\d*)?)/g;
+  var results = [];
+  var t;
+  while ( (t = priceRegex.exec(post)) !== null){
+    results.push(t[1]);
+  }
+  return results;
+}
+
+function extractProfessors(post) {
+  var professorRegex = /(^(a-z))*([a-z]+[\w, ]*) for ([a-z]{2}[a-z\. ]*)/ig;
+  var results = [];
+  while ( (t = professorRegex.exec(post)) !== null) results.push(t[4].trim());
+  return results;
+}
+
+
+function extractTitles(post) {
+  // It would be better to use a Markov model probably, this is just a hack
+  var titleRegex  = /(^(a-z))*([a-z]+[a-z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
+  var titleRegex2 = /(^(a-z))*([a-z]+[\w ]*) (by|for) [a-z]{2}.*/ig;
+  var results = [];
+  var t;
+  while ( (t = titleRegex.exec(post)) !== null){
+    results.push(t[3].trim());
+  }
+  while ( (t = titleRegex2.exec(post)) !== null){
+    results.push(t[3].trim());
+  }
+  return results;
+}
+
+////////////////////////////////////
+/// Grading Code
+///////////////////////////////////
 
 function compareTokens(classBooks, referenceBooks){
   classTokens     = [];
