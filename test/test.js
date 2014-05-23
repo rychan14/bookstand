@@ -135,6 +135,21 @@ describe('brain', function(){
     });
   });
 
+  it("can recognize non-titles", function(done) {
+    runForFiles("test/testData/title/notitle*", done, function(message){
+        brain.extractTitles(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract titles", function(done) {
+    var key = JSON.parse(fs.readFileSync('test/testData/title/key.json'));
+    runForFiles("test/testData/title/title*", done, function(message, filename){
+        var titles = brain.extractTitles(message);
+        var ref = key[filename.split("/").pop()];
+        titles.should.eql(ref);
+    });
+  });
+
 });
 
 describe('facebook', function(){

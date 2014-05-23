@@ -49,6 +49,21 @@ function extractEditions(post) {
   return results;
 }
 
+function extractTitles(post) {
+  // It would be better to use a Markov model probably, this is just a hack
+  var titleRegex  = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
+  var titleRegex2 = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z0-9 ]*) (by|for) [a-zA-Z]{2}.*/ig;
+  var results = [];
+  var t;
+  while ( (t = titleRegex.exec(post)) !== null){
+    results.push(t[3].trim());
+  }
+  while ( (t = titleRegex2.exec(post)) !== null){
+    results.push(t[3].trim());
+  }
+  return results;
+}
+
 function extractPrices(post) {
   var priceRegex = /\$((\d+)(\.\d*)?)/g;
   var results = [];
@@ -202,6 +217,7 @@ module.exports = {
   'extractISBNs'     : extractISBNs,
   'extractEditions'  : extractEditions,
   'extractPrices'    : extractPrices,
+  'extractTitles'    : extractTitles,
   'generateTestData' : generateTestData,
   'testClassifier'   : testClassifier
 };
