@@ -165,6 +165,21 @@ describe('brain', function(){
     });
   });
 
+  it("can recognize non-professors", function(done) {
+    runForFiles("test/testData/professor/noprofessor*", done, function(message){
+        brain.extractProfessors(message).length.should.equal(0);
+    });
+  });
+
+  it("can extract professors", function(done) {
+    var key = JSON.parse(fs.readFileSync('test/testData/professor/key.json'));
+    runForFiles("test/testData/professor/professor*", done, function(message, filename){
+        var professors = brain.extractProfessors(message);
+        var ref = key[filename.split("/").pop()];
+        professors.should.eql(ref);
+    });
+  });
+
   it("can recognize non-courses", function(done) {
     runForFiles("test/testData/course/nocourse*", done, function(message){
         brain.extractCourseNumbers(message).length.should.equal(0);
@@ -178,7 +193,7 @@ describe('brain', function(){
         var ref = key[filename.split("/").pop()];
         courses.should.eql(ref);
     });
-  });
+ });
 
 });
 

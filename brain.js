@@ -81,6 +81,13 @@ function extractCourseNumbers(post) {
   return results;
 }
 
+function extractProfessors(post) {
+  var professorRegex = /(^(a-z))*([a-z]+[\w, ]*) for ([a-z]{2}[a-z\. ]*)/ig;
+  var results = [];
+  while ( (t = professorRegex.exec(post)) !== null) results.push(t[4].trim());
+  return results;
+}
+
 function extractPrices(post) {
   var priceRegex = /\$((\d+)(\.\d*)?)/g;
   var results = [];
@@ -236,6 +243,7 @@ module.exports = {
   'extractPrices'        : extractPrices,
   'extractTitles'        : extractTitles,
   'extractAuthors'       : extractAuthors,
+  'extractProfessors'    : extractProfessors,
   'extractCourseNumbers' : extractCourseNumbers,
   'generateTestData'     : generateTestData,
   'testClassifier'       : testClassifier
