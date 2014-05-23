@@ -72,6 +72,14 @@ function extractAuthors(post) {
   return results;
 }
 
+function extractCourse(post) {
+  console.log(post);
+  var authorRegex = /(^(A-Za-z))*([a-zA-Z]+[a-zA-Z0-9, ]*) for ([a-zA-Z]{2}[a-z\. ]*)/ig;
+  var results = [];
+  while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
+  return results;
+}
+
 function extractPrices(post) {
   var priceRegex = /\$((\d+)(\.\d*)?)/g;
   var results = [];
