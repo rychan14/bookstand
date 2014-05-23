@@ -1,7 +1,7 @@
 var book   = require('./facebook');
 var glob   = require('glob');
 var fs     = require('fs');
-var getVar   = require('./util').getVar;
+var getVar = require('./util').getVar;
 var _      = require('underscore');
 var colors = require('colors');
 var util   = require('util');
@@ -21,9 +21,9 @@ var fields = ['author',
               'title'];
 
 function classifyBuySell(post){
-  var buyRegex = /buy.*?\b/i;
+  var buyRegex  = /buy.*?\b/i;
   var sellRegex = /sell.*?\b/i;
-  var b = buyRegex.exec(post);
+  var b         = buyRegex.exec(post);
   if (b) {
     return ['buy', b.index];
   }
@@ -34,22 +34,29 @@ function classifyBuySell(post){
   return null;
 }
 
+function extractISBNs(post) {
+  var isbnRegex = /\b((?:97[89])?\d{9}[\dx])\b/ig;
+  return post.match(isbnRegex) || [];
+}
+
+function extractEdition(post) {
+  var editionRegex = /\d+(st|nd|rd|th)?( )*edition/ig;
+  return post.match(editionRegex) || [];
+}
+
+
 function classifyPostFromText(post){
   var bs = classifyBuySell(post);
-
-  if (bs === null) {
-    return [];
+  if (!bs) return [];
+  var buysell = bs[0];
+  var isbns = extractISBNs(post);
+  if (isbns.length > 0) {
+    return _.map(isbns, function(isbn){
+      return {"isbn": isbn, "buysell": buysell};
+    });
+  } else {
+    return [{"buysell": buysell}];
   }
-
-  if (bs[0] === 'buy') {
-    return [{'buysell': 'buy'}];
-  }
-
-  if (bs[0] === 'sell') {
-    return [{'buysell': 'sell'}];
-  }
-
-  return [];
 }
 
 function compareTokens(classBooks, referenceBooks){
@@ -173,9 +180,9 @@ function generateTestData(num_posts){
 }
 
 module.exports = {
-  'generateTestData': generateTestData,
-  'classifyPost':     classifyPostFromText,
-  'testClassifier':   testClassifier,
-  'classifyBuySell':  classifyBuySell
-  
+  'classifyBuySell'  : classifyBuySell,
+  'classifyPost'     : classifyPostFromText,
+  'extractISBNs'     : extractISBNs,
+  'generateTestData' : generateTestData,
+  'testClassifier'   : testClassifier
 };

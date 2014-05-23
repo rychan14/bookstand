@@ -1,4 +1,4 @@
-/* jshint -W030 */ 
+/* jshint -W030 */
 var brain   = require('../brain');
 var app     = require('../server').app;
 var util    = require('../util');
@@ -57,38 +57,49 @@ describe('/auth/facebook', function(){
 
 });
 
+function runForFiles(globPath, done, ffun){
+  glob(globPath, function(er, filenames){
+    filenames.length.should.be.above(0);
+    filenames.forEach(function(filename){
+      ffun(fs.readFileSync(filename).toString(), filename);
+    });
+    done();
+  });
+}
+
 describe('brain', function(){
 
   it("can figure out what are buys", function(done) {
-    glob("test/testData/buysell/buy*", function(er, files){
-      files.length.should.be.above(0);
-      files.forEach(function(file){
-        var message = fs.readFileSync(file);
+    runForFiles("test/testData/buysell/buy*", done, function(message){
         brain.classifyBuySell(message)[0].should.equal('buy');
-      });
-      done();
     });
   });
 
   it("can figure out what are sells", function(done) {
-    glob("test/testData/buysell/sell*", function(er, files){
-      files.length.should.be.above(0);
-      files.forEach(function(file){
-        var message = fs.readFileSync(file);
+    runForFiles("test/testData/buysell/sell*", done,  function(message){
         brain.classifyBuySell(message)[0].should.equal('sell');
-      });
-      done();
     });
   });
 
   it("can figure out what are not buys or sells", function(done) {
-    glob("test/testData/buysell/notbuysell*", function(er, files){
-      files.length.should.be.above(0);
-      files.forEach(function(file){
-        var message = fs.readFileSync(file);
-        should(brain.classifyBuySell(message)).not.be.ok;
-      });
-      done();
+    runForFiles("test/testData/buysell/notbuysell*", done, function(message){
+      should(brain.classifyBuySell(message)).not.be.ok;
+    });
+  });
+
+  it("can recognize non-ISBNS", function(done) {
+    runForFiles("test/testData/isbn/noisbn*", done, function(message){
+        brain.extractISBNs(message).length.should.equal(0);
+    });
+  });
+
+  it("can recognize ISBNS", function(done) {
+    runForFiles("test/testData/isbn/isbn*", done, function(message, filename){
+        var isbn = brain.extractISBNs(message);
+        var r = /test\/testData\/isbn\/isbn(\d+)/;
+        var m = r.exec(filename);
+        isbn.length.should.equal(1);
+        isbn[0].should.equal(m[1]);
     });
   });
 
@@ -120,14 +131,14 @@ describe('facebook', function(){
     }, 0);
   });
 
-  it("should access 200 group posts", function(done){
+  it("should access 99 group posts", function(done){
     this.timeout(5000); // This could take a while
     book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
       res.should.be.ok;
       should(res.error).not.ok;
-      res.data.length.should.equal(200);
+      res.data.length.should.equal(99);
       done();
-    }, 200);
+    }, 100); // 100, why?
   });
 
 });
