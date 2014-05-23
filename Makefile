@@ -22,6 +22,9 @@ resetDB: .tmp.resetdb
 test: test/test.js
 	mocha --reporter=nyan
 
+spec: test/test.js
+	mocha --reporter=spec
+
 clean:
 	rm -rf node_modules
 	rm .tmp.mocha
