@@ -6,18 +6,30 @@ var book    = require('../facebook');
 var should  = require('should');
 var Browser = require('zombie');
 var glob    = require('glob');
+var FB      = require('fb');
 var fs      = require('fs');
 
 describe('util', function(){
   describe('#getVar()', function(){
 
      it('should return a numeric value for FB_APP_ID', function(){
-       var re = /^[0-9]+$/;
+       var re = /^\d+$/;
        re.test(util.getVar('FB_APP_ID')).should.eql(true);
      });
 
+     it('should return a numeric value for TEXTBOOK_GRP_ID', function(){
+       var re = /^\d+$/;
+       re.test(util.getVar('TEXTBOOK_GRP_ID')).should.eql(true);
+     });
+
+     it('should return a numeric value for TEST_TEXTBOOK_GRP_ID', function(){
+       var re = /^\d+$/;
+       re.test(util.getVar('TEST_TEXTBOOK_GRP_ID')).should.eql(true);
+     });
+
+
      it('should return an alphanumeric value for FB_SECRET', function(){
-       var re = /^[0-9a-zA-Z]+$/;
+       var re = /^\w+$/;
        re.test(util.getVar('FB_APP_ID')).should.eql(true);
      });
 
@@ -42,7 +54,7 @@ describe('/auth/facebook', function(){
     this.browser = new Browser({site:'http://localhost:3000'});
   });
 
-  before(function(done){ 
+  before(function(done){
     this.browser.visit('/auth/facebook', done);
   });
 
@@ -236,8 +248,10 @@ describe('brain', function(){
 describe('facebook', function(){
 
   before(function(){
-    this.fbGroupId = util.getVar('TEXTBOOK_GRP_ID');
-    this.fbToken   = util.getVar('TEST_TOKEN');
+    this.testFbGroupId = util.getVar('TEST_TEXTBOOK_GRP_ID');
+    this.fbGroupId     = util.getVar('TEXTBOOK_GRP_ID');
+    this.fbToken       = util.getVar('TEST_TOKEN');
+    this.pubFbToken    = util.getVar('PUBLISH_TEST_TOKEN');
   });
 
   it("should access 20 group posts", function(done){
@@ -269,6 +283,21 @@ describe('facebook', function(){
     }, 100); // 100, why?
   });
 
+  it("should create a test post", function(done){
+    var content = "Test post please ignore\n" + new Date();
+    book.postToGroup(this.testFbGroupId, this.pubFbToken, content, function(res){
+      res.should.be.ok;
+      should(res.error).not.ok;
+      FB.api("/" + res.id, {'fields': ['message']}, function(res){
+        res.should.be.ok;
+        should(res.error).not.ok;
+        res.message.should.eql(content);
+        done();
+      });
+    });
+  });
+
+
 });
 
 describe('home', function(){
@@ -277,7 +306,7 @@ describe('home', function(){
     this.browser = new Browser({site:'http://localhost:3000'});
   });
 
-  before(function(done){ 
+  before(function(done){
     this.browser.visit('/', done);
   });
 

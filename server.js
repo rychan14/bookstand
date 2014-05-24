@@ -1,4 +1,4 @@
-var util     = require('./util');
+var util     = require('./util.js');
 var mustache = require('mustache-express');
 var express  = require('express');
 var passport = require('passport');

@@ -13,6 +13,13 @@ function getGroupPosts(groupId, accessToken, callback, limit){
   FB.api("/" + groupId + '/feed/', {'fields': post_fields, 'limit': limit}, callback);
 }
 
+function postToGroup(groupId, accessToken, content, callback){
+  FB.setAccessToken(accessToken);
+  FB.api('/' + groupId + '/feed/', 'post', {'message': content}, callback);
+}
+
 module.exports = {
-  'getGroupPosts': getGroupPosts
+  'getGroupPosts': getGroupPosts,
+  'postToGroup': postToGroup
+
 };

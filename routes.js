@@ -21,7 +21,7 @@ passport.deserializeUser(function(obj, done){done(null, obj); });
 
 var controllers = require('./controllers');
 
-module.exports = function(app){ 
+module.exports = function(app){
   app.get('/', function(req, res, next) {
     controllers.index(req, res, next);
   });
