@@ -77,7 +77,7 @@ function classifyPostFromText(post){
 function extractAuthors(post) {
   var authorRegex = /((^(a-z))+\s)?([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
   var results = [];
-  while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
+  while ( (t = authorRegex.exec(post)) !== null) results.push(t[5].trim());
   return results;
 }
 
