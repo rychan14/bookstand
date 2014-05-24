@@ -1,0 +1,50 @@
+[
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": null,
+        "course_number": "MGT 132",
+        "edition": null,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": null,
+        "course_number": "MGT 133",
+        "edition": null,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": null,
+        "course_number": "MGT 133",
+        "edition": 5,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "sell",
+        "condition": null,
+        "course_name": null,
+        "course_number": "MATH 142A",
+        "edition": 2,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    }
+]

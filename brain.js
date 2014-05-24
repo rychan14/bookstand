@@ -24,7 +24,7 @@ var fields = ['author',
 
 function classifyBuySell(post){
   var buyRegex  = /buy.*?\b/i;
-  var sellRegex = /sell.*?\b/i;
+  var sellRegex = /(sell.*?\b|don't need)/i;
   var b         = buyRegex.exec(post);
   if (b) {
     return ['buy', b.index];
@@ -39,24 +39,43 @@ function classifyBuySell(post){
 function classifyPostFromText(post){
   var bs = classifyBuySell(post);
   if (!bs) return [];
+  var buysell = bs[0];
+  content     = post.substr(bs[1]);
 
-  var buysell  = bs[0];
-  var isbns    = extractISBNs(post);
-  var editions = extractEditions(post);
+  var authors       = extractAuthors(content);
+  var courseNumbers = extractCourseNumbers(content);
+  var editions      = extractEditions(content);
+  var isbns         = extractISBNs(content);
+  var prices        = extractPrices(content);
+  var professors    = extractProfessors(content);
+  var titles        = extractTitles(content);
 
-  if (isbns.length > 0) {
-    return _.map(isbns, function(isbn){
-      return {"isbn": isbn, "buysell": buysell};
+  var numItems = _.max([authors.length,
+                        courseNumbers.length,
+                        editions.length,
+                        isbns.length,
+                        prices.length,
+                        professors.length,
+                        titles.length]);
+  var results = [];
+  for(var i = 0; i < numItems; i++){
+    results.push({
+      "author"       : authors[i],
+      "buysell"      : buysell,
+      "courseNumber" : courseNumbers[i],
+      "edition"      : editions[i],
+      "isbn"         : isbns[i],
+      "price"        : prices[i],
+      "professor"    : professors[i],
+      "title"        : titles[i]
     });
-  } else {
-    return [{"buysell": buysell}];
   }
+
+  return results;
 }
 
-
-
 function extractAuthors(post) {
-  var authorRegex = /(^(a-z))*([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
+  var authorRegex = /((^(a-z))+\s)?([a-z]+[\w, ]*) by ([a-z]{2}[a-z\. ]*)/ig;
   var results = [];
   while ( (t = authorRegex.exec(post)) !== null) results.push(t[4].trim());
   return results;
@@ -104,17 +123,18 @@ function extractProfessors(post) {
 
 
 function extractTitles(post) {
-  // It would be better to use a Markov model probably, this is just a hack
-  var titleRegex  = /(^(a-z))*([a-z]+[a-z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig;
-  var titleRegex2 = /(^(a-z))*([a-z]+[\w ]*) (by|for) [a-z]{2}.*/ig;
+  // It would be better to use a Markov model probably, these are just heuristics
+  var regexes = [
+    [/(^(a-z))*([a-z]+[a-z ]*)(, )*(\d+)(st|nd|rd|th)?( )*edition/ig, 3],
+    [/(^(a-z))*([a-z]+[\w ]*) (by|for) [a-z]{2}.*/ig, 3],
+    [/(^(a-z))*([a-z]+[\w ]* (vo|vol|volume)\.? \d+).*/ig, 3]
+  ];
   var results = [];
-  var t;
-  while ( (t = titleRegex.exec(post)) !== null){
-    results.push(t[3].trim());
-  }
-  while ( (t = titleRegex2.exec(post)) !== null){
-    results.push(t[3].trim());
-  }
+  regexes.forEach(function(regex){
+    while ( (t = regex[0].exec(post)) !== null){
+      results.push(t[regex[1]].trim());
+    }
+  });
   return results;
 }
 
@@ -122,42 +142,15 @@ function extractTitles(post) {
 /// Grading Code
 ///////////////////////////////////
 
-function compareTokens(classBooks, referenceBooks){
-  classTokens     = [];
-  referenceTokens = [];
-  extraTokens     = [];
-  matched         = [];
-  fields.forEach(function(field){
-    classBooks.forEach(function(book){
-      if (field in book){
-        classTokens.push(book[field]);
-      }
-    });
-    referenceBooks.forEach(function(book){
-      if (field in book){
-        referenceTokens.push(book[field]);
-      }
-    });
-  });
-  classTokens.forEach(function(token){
-    var refIndex = referenceTokens.indexOf(token);
-    if (refIndex != -1){
-      referenceTokens.splice(refIndex, 1);
-      matched.push(tokens);
-    } else {
-      extraTokens.push(token);
-    }
-  });
-  return {
-    "matched"      : matched,
-    "classnExtra"  : extraTokens,
-    "classnMissed" : referenceTokens
-  };
-}
-
 function sameFields(classn, reference) {
   return fields.filter(function(field){
     return classn[field] == reference[field];
+  });
+}
+
+function differentFields(classn, reference) {
+  return fields.filter(function(field){
+    return classn[field] != reference[field];
   });
 }
 
@@ -178,7 +171,8 @@ function grade(classns, refs) {
         if (!fields) {
           results.classnExtra.push(classn);
         } else {
-          results.matched.push({classn: classn, ref: ref, matched: fields});
+          var diffFields = differentFields(classn, ref);
+          results.matched.push({classn: classn, ref: ref, different: diffFields});
         }
         refs.splice(refs.indexOf(ref), 1);
       }
@@ -196,6 +190,7 @@ function testClassifier(){
   glob("train/*.message", function(er, files) {
     var success = 0;
     var fails   = 0;
+    var skips   = 0;
     files.forEach(function(file){
       // Do something here
       var ref = file + ".ref";
@@ -205,36 +200,49 @@ function testClassifier(){
         var message        = fs.readFileSync(file).toString();
         var classification = classifyPostFromText(message);
         var reference      = JSON.parse(fs.readFileSync(ref));
-        console.log("For " + colors.blue(file) + ": " );
-        console.log(colors.grey(message));
-        console.log("Classification: ");
-        console.log(classification);
-        console.log("Results: ");
-        var graded = grade(classification, reference);
-        if (isGood(graded)){
-          success++;
-          console.log("Classification Success".green);
+        var graded         = grade(classification, reference);
+        var skip           = file.substr('skip') === 0;
+        if (!skip){
+          if (isGood(graded)){
+            console.log(colors.green(file+": success"));
+            success++;
+          } else {
+            console.log("------------------------------\n");
+            console.log(colors.red(file+": failure"));
+            console.log(colors.grey(message));
+            console.log("Classification: ");
+            console.log(classification);
+            console.log(JSON.stringify(graded, undefined, 2));
+            fails++;
+            console.log("------------------------------\n");
+          }
         } else {
-          console.log("Classification Failed, Results: ".red);
-          console.log(JSON.stringify(graded, undefined, 2));
-          fails++;
+          if (isGood(graded)){
+            console.log(colors.red(file+": succeeded, but it should have failed!"));
+            fails++;
+          } else {
+            console.log(colors.blue(file+": skipped"));
+            skips++;
+          }
         }
-        console.log("------------------------------\n");
       }
     });
-    console.log(colors.green(success + " successes"));
+    console.log(colors.green(success + " succeeded."));
+    console.log(colors.blue(skips + " skipped."));
     if (!fails) {
-      console.log("No Failures!".green);
+      console.log(colors.green("0 failed."));
     } else {
-      console.log(colors.red(fails + " failures"));
+      console.log(colors.red(fails + " failed."));
     }
   });
 }
 
 function generateTestData(num_posts){
+  toSkip = fs.readFileSync('train/skip').toString();
   book.getGroupPosts(fbGroupId, fbToken, function(res){
     var d = res.data;
     for (var i = 0; i < d.length; i++) {
+      if (toSkip.indexOf(d[i].id) !== -1) continue;
       var filename = 'train/' + d[i].id + ".message";
       console.log(filename);
       fs.writeFile('train/' + d[i].id + ".message", d[i].message + '\n');
@@ -244,7 +252,9 @@ function generateTestData(num_posts){
 
 module.exports = {
   'classifyBuySell'      : classifyBuySell,
-  'classifyPost'         : classifyPostFromText,
+  'classifyPostFromText' : classifyPostFromText,
+  'grade'                : grade,
+  'isGood'               : isGood,
   'extractISBNs'         : extractISBNs,
   'extractEditions'      : extractEditions,
   'extractPrices'        : extractPrices,

@@ -69,6 +69,42 @@ function runForFiles(globPath, done, ffun){
 
 describe('brain', function(){
 
+  it("can classify for quite a few posts", function() {
+    var posts = [
+     'train/331733573546962_639116902808626.message',
+     'train/331733573546962_663445050375811.message',
+     'train/331733573546962_663636610356655.message',
+     'train/331733573546962_663637687023214.message',
+     'train/331733573546962_663639237023059.message',
+     'train/331733573546962_663648697022113.message',
+     'train/331733573546962_664334866953496.message',
+     'train/331733573546962_664438003609849.message',
+     'train/331733573546962_664476800272636.message',
+     'train/331733573546962_664613300258986.message',
+     'train/331733573546962_665861346800848.message',
+     'train/331733573546962_666169160103400.message',
+     'train/331733573546962_667261713327478.message',
+     'train/331733573546962_667377023315947.message',
+     'train/331733573546962_667413449978971.message',
+     'train/331733573546962_667478009972515.message',
+     'train/331733573546962_667652629955053.message',
+     'train/331733573546962_667758869944429.message',
+     'train/331733573546962_669334113120238.message',
+     'train/331733573546962_670393293014320.message',
+     'train/331733573546962_670906362963013.message',
+     'train/331733573546962_671148582938791.message',
+     'train/331733573546962_671272646259718.message'
+    ];
+    posts.forEach(function(filename){
+        var ref            = filename + ".ref";
+        var message        = fs.readFileSync(filename).toString();
+        var classification = brain.classifyPostFromText(message);
+        var reference      = JSON.parse(fs.readFileSync(ref));
+        var grade          = brain.grade(classification, reference);
+        brain.isGood(grade).should.equal(true);
+    });
+  });
+
   it("can figure out what are buys", function(done) {
     runForFiles("test/testData/buysell/buy*", done, function(message){
         brain.classifyBuySell(message)[0].should.equal('buy');

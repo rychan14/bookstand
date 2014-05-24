@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "author": null,
+        "buysell": "buy",
+        "condition": null,
+        "course_name": null,
+        "course_number": "HUM 2",
+        "edition": null,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    },
+    {
+        "author": null,
+        "buysell": "buy",
+        "condition": null,
+        "course_name": null,
+        "course_number": "HUM 5",
+        "edition": null,
+        "isbn": null,
+        "price": null,
+        "professor": null,
+        "title": null
+    }
+]
