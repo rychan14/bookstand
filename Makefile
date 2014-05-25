@@ -1,11 +1,11 @@
-build: updateDependencies resetDB installMocha
-.PHONY: build test updateDependencies resetDB
+build: updateDependencies setupDB installMocha
+.PHONY: build test updateDependencies setupDB
 
 installMocha: .tmp.mocha
 
 updateDependencies: .tmp.updeps
 
-resetDB: .tmp.resetdb
+setupDB: .tmp.setupdb
 
 .tmp.mocha:
 	npm -g install mocha
@@ -15,9 +15,9 @@ resetDB: .tmp.resetdb
 	npm install
 	@touch .tmp.updeps
 
-.tmp.resetdb: meta/schema.sql
-	psql -f meta/schema.sql
-	@touch .tmp.resetdb
+.tmp.setupdb: setupDb.js
+	mongo bookstand setupDb.js
+	@touch .tmp.setupdb
 
 test: test/test.js
 	mocha --reporter=nyan
@@ -29,4 +29,4 @@ clean:
 	rm -rf node_modules
 	rm .tmp.mocha
 	rm .tmp.updeps
-	rm .tmp.resetdb
+	rm .tmp.setupdb

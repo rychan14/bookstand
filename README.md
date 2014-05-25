@@ -8,9 +8,8 @@ Installing and Running
 
 First, you should install `npm` using your favorite package manager
 
-Additionally, you should be running a local postgres server and have the `psql` command
-in your `PATH`. If you are running Mac OS X, you can get postgres from:
-http://postgresapp.com/. Otherwise, you can install it using your favorite package manager.
+Additionally, you should be running a local mongo server and have the `mongo` command
+in your `PATH`.
 
 To install the dependencies and set up the DB, run
 
@@ -30,3 +29,7 @@ Ensure that you have sane values for the following environment variables:
 To run the server, run
 
     node app.js
+
+To run the FB post listener, run
+
+    node listener.js
