@@ -18,7 +18,7 @@ function formatPostForDB(post){
 }
 
 function notFromBookstand(message){
-  return message.indexOf('bookstand') == -1;
+  return message && message.indexOf('bookstand') == -1;
 }
 
 function getBooksFromPost(post){
@@ -76,9 +76,10 @@ function downloadNewPosts(cb){
       console.log(res.error);
       return;
     }
+    console.log(res);
     posts = _.filter(res.data, function(post){return notFromBookstand(post.message);});
     cb(posts);
-  },100);
+  },50);
 }
 
 function loopFunction(){
