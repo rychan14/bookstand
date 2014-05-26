@@ -19,10 +19,10 @@ setupDB: .tmp.setupdb
 	mongo bookstand setupDb.js
 	@touch .tmp.setupdb
 
-test: test/test.js
+test:
 	mocha --reporter=nyan
 
-spec: test/test.js
+spec:
 	mocha --reporter=spec
 
 clean:
