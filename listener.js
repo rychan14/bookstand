@@ -2,12 +2,15 @@ var _           = require('underscore');
 var getVar      = require('./util.js').getVar;
 var book        = require('./facebook.js');
 var brain       = require('./brain.js');
+var constants   = require('./constants.js');
 var MongoClient = require('mongodb').MongoClient;
 var fbGroupId   = getVar('TEXTBOOK_GRP_ID');
 var fbToken     = getVar('TEST_TOKEN');
 
 function formatPostForDB(post){
-  return {
+  //console.log("POST");
+  //console.log(post);
+  var formattedPost = {
     "id"          : post.id,
     "message"     : post.message,
     "createdTime" : new Date(post.created_time),
@@ -15,23 +18,42 @@ function formatPostForDB(post){
     "fromFbId"    : post.from.id,
     "fromFbName"  : post.from.name
   };
+  //console.log("FMT");
+  //console.log(formattedPost);
+  return formattedPost;
+}
+
+function associateBookWithPost(book, post){
+  /*console.log("BOOK");
+  console.log(book);
+  console.log("BPOST");
+  console.log(post); */
+  var b             = book;
+  b.originalPostId  = post.id;
+  b.originalMessage = post.message;
+  b.createdTime     = new Date(post.created_time);
+  b.updatedTime     = new Date(post.updated_time);
+  b.fromFbId        = post.from.id;
+  b.fromName        = post.from.name;
+  /* console.log("NEWBOOK");
+  console.log(b); */
+  return b;
 }
 
 function notFromBookstand(message){
-  return message && message.indexOf('bookstand') == -1;
+  return !message || message.indexOf(constants.BOOKSTAND_SIGNATURE) == -1;
 }
 
 function getBooksFromPost(post){
+  console.log("POST");
+  console.log(post);
   var books = brain.classifyPostFromText(post.message);
-  books.forEach(function(book){
-    book.originalPostId  = post.id;
-    book.originalMessage = post.message;
-    book.createdTime     = new Date(post.created_time);
-    book.updatedTime     = new Date(post.updated_time);
-    book.fromFbId        = post.from.id;
-    book.fromName        = post.from.name;
-  });
-  return books;
+  var assoc = function(book){
+    return associateBookWithPost(book, post);
+  };
+  console.log("BOOKS");
+  console.log(_.map(books, assoc));
+  return _.map(books, assoc);
 }
 
 var waiting = ["books", "posts"];
@@ -79,7 +101,7 @@ function downloadNewPosts(cb){
     console.log(res);
     posts = _.filter(res.data, function(post){return notFromBookstand(post.message);});
     cb(posts);
-  },50);
+  }, 15);
 }
 
 function loopFunction(){
@@ -92,4 +114,12 @@ function loopFunction(){
   });
 }
 
-loopFunction();
+module.exports = {
+  associateBookWithPost : associateBookWithPost,
+  formatPostForDB       : formatPostForDB,
+  getBooksFromPost      : getBooksFromPost,
+  notFromBookstand      : notFromBookstand
+};
+
+if(require.main === module)
+  loopFunction();
