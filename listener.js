@@ -8,8 +8,6 @@ var fbGroupId   = getVar('TEXTBOOK_GRP_ID');
 var fbToken     = getVar('TEST_TOKEN');
 
 function formatPostForDB(post){
-  //console.log("POST");
-  //console.log(post);
   var formattedPost = {
     "id"          : post.id,
     "message"     : post.message,
@@ -18,16 +16,10 @@ function formatPostForDB(post){
     "fromFbId"    : post.from.id,
     "fromFbName"  : post.from.name
   };
-  //console.log("FMT");
-  //console.log(formattedPost);
   return formattedPost;
 }
 
 function associateBookWithPost(book, post){
-  /*console.log("BOOK");
-  console.log(book);
-  console.log("BPOST");
-  console.log(post); */
   var b             = book;
   b.originalPostId  = post.id;
   b.originalMessage = post.message;
@@ -35,8 +27,6 @@ function associateBookWithPost(book, post){
   b.updatedTime     = new Date(post.updated_time);
   b.fromFbId        = post.from.id;
   b.fromName        = post.from.name;
-  /* console.log("NEWBOOK");
-  console.log(b); */
   return b;
 }
 
@@ -45,14 +35,10 @@ function notFromBookstand(message){
 }
 
 function getBooksFromPost(post){
-  console.log("POST");
-  console.log(post);
   var books = brain.classifyPostFromText(post.message);
   var assoc = function(book){
     return associateBookWithPost(book, post);
   };
-  console.log("BOOKS");
-  console.log(_.map(books, assoc));
   return _.map(books, assoc);
 }
 

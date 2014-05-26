@@ -119,131 +119,162 @@ describe('brain', function(){
     });
   });
 
-  it("can figure out what are buys", function(done) {
-    runForFiles("test/testData/buysell/buy*", done, function(message){
-        brain.classifyBuySell(message)[0].should.equal('buy');
+  describe("#classifyBuySell", function(){
+
+    it("can figure out what are buys", function(done) {
+      runForFiles("test/testData/buysell/buy*", done, function(message){
+          brain.classifyBuySell(message)[0].should.equal('buy');
+      });
+    });
+
+    it("can figure out what are sells", function(done) {
+      runForFiles("test/testData/buysell/sell*", done,  function(message){
+          brain.classifyBuySell(message)[0].should.equal('sell');
+      });
+    });
+
+    it("can figure out what are not buys or sells", function(done) {
+      runForFiles("test/testData/buysell/notbuysell*", done, function(message){
+        should(brain.classifyBuySell(message)).not.be.ok;
+      });
     });
   });
 
-  it("can figure out what are sells", function(done) {
-    runForFiles("test/testData/buysell/sell*", done,  function(message){
-        brain.classifyBuySell(message)[0].should.equal('sell');
+  describe("#extractISBNs", function(){
+
+    it("can recognize non-ISBNS", function(done) {
+      runForFiles("test/testData/isbn/noisbn*", done, function(message){
+          brain.extractISBNs(message).length.should.equal(0);
+      });
     });
+
+    it("can extract ISBNS", function(done) {
+      runForFiles("test/testData/isbn/isbn*", done, function(message, filename){
+          var isbn = brain.extractISBNs(message);
+          var r = /test\/testData\/isbn\/isbn(\d+)/;
+          var m = filename.match(r);
+          isbn.length.should.equal(1);
+          isbn[0].should.equal(m[1]);
+      });
+    });
+
   });
 
-  it("can figure out what are not buys or sells", function(done) {
-    runForFiles("test/testData/buysell/notbuysell*", done, function(message){
-      should(brain.classifyBuySell(message)).not.be.ok;
+  describe("#extractEditions", function(){
+
+    it("can recognize non-editions", function(done) {
+      runForFiles("test/testData/edition/noedition*", done, function(message){
+          brain.extractEditions(message).length.should.equal(0);
+      });
     });
+
+    it("can extract editions", function(done) {
+      runForFiles("test/testData/edition/edition*", done, function(message, filename){
+          var editions = brain.extractEditions(message);
+          var r = /test\/testData\/edition\/edition(\d+)/;
+          var m = filename.match(r);
+          editions.length.should.equal(1);
+          editions[0].should.equal(m[1]);
+      });
+    });
+
   });
 
-  it("can recognize non-ISBNS", function(done) {
-    runForFiles("test/testData/isbn/noisbn*", done, function(message){
-        brain.extractISBNs(message).length.should.equal(0);
+  describe("#extractPrices", function(){
+
+    it("can recognize non-prices", function(done) {
+      runForFiles("test/testData/price/noprice*", done, function(message){
+          brain.extractPrices(message).length.should.equal(0);
+      });
     });
+
+    it("can extract prices", function(done) {
+      runForFiles("test/testData/price/price*", done, function(message, filename){
+          var prices = brain.extractPrices(message);
+          var r = /test\/testData\/price\/price(\d+)/;
+          var m = filename.match(r);
+          prices.length.should.equal(1);
+          prices[0].should.equal(m[1]);
+      });
+    });
+
   });
 
-  it("can extract ISBNS", function(done) {
-    runForFiles("test/testData/isbn/isbn*", done, function(message, filename){
-        var isbn = brain.extractISBNs(message);
-        var r = /test\/testData\/isbn\/isbn(\d+)/;
-        var m = filename.match(r);
-        isbn.length.should.equal(1);
-        isbn[0].should.equal(m[1]);
+  describe("#extractTitles", function(){
+
+    it("can recognize non-titles", function(done) {
+      runForFiles("test/testData/title/notitle*", done, function(message){
+          brain.extractTitles(message).length.should.equal(0);
+      });
     });
+
+    it("can extract titles", function(done) {
+      var key = JSON.parse(fs.readFileSync('test/testData/title/key.json'));
+      runForFiles("test/testData/title/title*", done, function(message, filename){
+          var titles = brain.extractTitles(message);
+          var ref = key[filename.split("/").pop()];
+          titles.should.eql(ref);
+      });
+    });
+
   });
 
-  it("can recognize non-editions", function(done) {
-    runForFiles("test/testData/edition/noedition*", done, function(message){
-        brain.extractEditions(message).length.should.equal(0);
+  describe("#extractAuthors", function(){
+
+    it("can recognize non-authors", function(done) {
+      runForFiles("test/testData/author/noauthor*", done, function(message){
+          brain.extractAuthors(message).length.should.equal(0);
+      });
     });
+
+    it("can extract authors", function(done) {
+      var key = JSON.parse(fs.readFileSync('test/testData/author/key.json'));
+      runForFiles("test/testData/author/author*", done, function(message, filename){
+          var authors = brain.extractAuthors(message);
+          var ref = key[filename.split("/").pop()];
+          authors.should.eql(ref);
+      });
+    });
+
   });
 
-  it("can extract editions", function(done) {
-    runForFiles("test/testData/edition/edition*", done, function(message, filename){
-        var editions = brain.extractEditions(message);
-        var r = /test\/testData\/edition\/edition(\d+)/;
-        var m = filename.match(r);
-        editions.length.should.equal(1);
-        editions[0].should.equal(m[1]);
+  describe("#extractProfessors", function(){
+
+    it("can recognize non-professors", function(done) {
+      runForFiles("test/testData/professor/noprofessor*", done, function(message){
+          brain.extractProfessors(message).length.should.equal(0);
+      });
     });
+
+    it("can extract professors", function(done) {
+      var key = JSON.parse(fs.readFileSync('test/testData/professor/key.json'));
+      runForFiles("test/testData/professor/professor*", done, function(message, filename){
+          var professors = brain.extractProfessors(message);
+          var ref = key[filename.split("/").pop()];
+          professors.should.eql(ref);
+      });
+    });
+
   });
 
-  it("can recognize non-prices", function(done) {
-    runForFiles("test/testData/price/noprice*", done, function(message){
-        brain.extractPrices(message).length.should.equal(0);
-    });
-  });
+  describe("#extractCourses", function(){
 
-  it("can extract prices", function(done) {
-    runForFiles("test/testData/price/price*", done, function(message, filename){
-        var prices = brain.extractPrices(message);
-        var r = /test\/testData\/price\/price(\d+)/;
-        var m = filename.match(r);
-        prices.length.should.equal(1);
-        prices[0].should.equal(m[1]);
+    it("can recognize non-courses", function(done) {
+      runForFiles("test/testData/course/nocourse*", done, function(message){
+          brain.extractCourseNumbers(message).length.should.equal(0);
+      });
     });
-  });
 
-  it("can recognize non-titles", function(done) {
-    runForFiles("test/testData/title/notitle*", done, function(message){
-        brain.extractTitles(message).length.should.equal(0);
-    });
-  });
+    it("can extract courses", function(done) {
+      var key = JSON.parse(fs.readFileSync('test/testData/course/key.json'));
+      runForFiles("test/testData/course/course*", done, function(message, filename){
+          var courses = brain.extractCourseNumbers(message);
+          var ref = key[filename.split("/").pop()];
+          courses.should.eql(ref);
+      });
+   });
 
-  it("can extract titles", function(done) {
-    var key = JSON.parse(fs.readFileSync('test/testData/title/key.json'));
-    runForFiles("test/testData/title/title*", done, function(message, filename){
-        var titles = brain.extractTitles(message);
-        var ref = key[filename.split("/").pop()];
-        titles.should.eql(ref);
-    });
   });
-
-  it("can recognize non-authors", function(done) {
-    runForFiles("test/testData/author/noauthor*", done, function(message){
-        brain.extractAuthors(message).length.should.equal(0);
-    });
-  });
-
-  it("can extract authors", function(done) {
-    var key = JSON.parse(fs.readFileSync('test/testData/author/key.json'));
-    runForFiles("test/testData/author/author*", done, function(message, filename){
-        var authors = brain.extractAuthors(message);
-        var ref = key[filename.split("/").pop()];
-        authors.should.eql(ref);
-    });
-  });
-
-  it("can recognize non-professors", function(done) {
-    runForFiles("test/testData/professor/noprofessor*", done, function(message){
-        brain.extractProfessors(message).length.should.equal(0);
-    });
-  });
-
-  it("can extract professors", function(done) {
-    var key = JSON.parse(fs.readFileSync('test/testData/professor/key.json'));
-    runForFiles("test/testData/professor/professor*", done, function(message, filename){
-        var professors = brain.extractProfessors(message);
-        var ref = key[filename.split("/").pop()];
-        professors.should.eql(ref);
-    });
-  });
-
-  it("can recognize non-courses", function(done) {
-    runForFiles("test/testData/course/nocourse*", done, function(message){
-        brain.extractCourseNumbers(message).length.should.equal(0);
-    });
-  });
-
-  it("can extract courses", function(done) {
-    var key = JSON.parse(fs.readFileSync('test/testData/course/key.json'));
-    runForFiles("test/testData/course/course*", done, function(message, filename){
-        var courses = brain.extractCourseNumbers(message);
-        var ref = key[filename.split("/").pop()];
-        courses.should.eql(ref);
-    });
- });
 
 });
 
@@ -256,49 +287,56 @@ describe('facebook', function(){
     this.pubFbToken    = util.getVar('PUBLISH_TEST_TOKEN');
   });
 
-  it("should access 20 group posts", function(done){
-    book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
-      res.should.be.ok;
-      should(res.error).not.ok;
-      res.data.length.should.equal(20);
-      done();
-    });
-  });
+  describe("#getGroupPosts", function(){
 
-  it("should access 0 group posts", function(done){
-    this.timeout(25);
-    book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
-      res.should.be.ok;
-      should(res.error).not.ok;
-      res.data.length.should.equal(0);
-      done();
-    }, 0);
-  });
-
-  it("should access 99 group posts", function(done){
-    this.timeout(5000); // This could take a while
-    book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
-      res.should.be.ok;
-      should(res.error).not.ok;
-      res.data.length.should.equal(99);
-      done();
-    }, 100); // 100, why?
-  });
-
-  it("should create a test post", function(done){
-    var content = "Test post please ignore\n" + new Date();
-    book.postToGroup(this.testFbGroupId, this.pubFbToken, content, function(res){
-      res.should.be.ok;
-      should(res.error).not.ok;
-      FB.api("/" + res.id, {'fields': ['message']}, function(res){
+    it("should access 20 group posts", function(done){
+      book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
         res.should.be.ok;
         should(res.error).not.ok;
-        res.message.should.eql(content);
+        res.data.length.should.equal(20);
         done();
       });
     });
+
+    it("should access 0 group posts", function(done){
+      this.timeout(25);
+      book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
+        res.should.be.ok;
+        should(res.error).not.ok;
+        res.data.length.should.equal(0);
+        done();
+      }, 0);
+    });
+
+    it("should access 99 group posts", function(done){
+      this.timeout(5000); // This could take a while
+      book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
+        res.should.be.ok;
+        should(res.error).not.ok;
+        res.data.length.should.equal(99);
+        done();
+      }, 100); // 100, why?
+    });
+
   });
 
+  describe("#postToGroup", function(){
+
+    it("should create a test post", function(done){
+      var content = "Test post please ignore\n" + new Date();
+      book.postToGroup(this.testFbGroupId, this.pubFbToken, content, function(res){
+        res.should.be.ok;
+        should(res.error).not.ok;
+        FB.api("/" + res.id, {'fields': ['message']}, function(res){
+          res.should.be.ok;
+          should(res.error).not.ok;
+          res.message.should.eql(content);
+          done();
+        });
+      });
+    });
+
+  });
 
 });
 
