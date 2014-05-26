@@ -2,7 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var util        = require('./util.js');
 
 function insertColl(coll, data, cb, dbUri){
-  if (typeof dbUri === undefined) {
+  if (typeof dbUri === 'undefined') {
     dbUri = util.getVar('BS_DB_URI');
   }
   if (!data.length) return cb(false, coll);
@@ -18,8 +18,8 @@ function insertColl(coll, data, cb, dbUri){
   });
 }
 
-function find(coll, params, options, cb, dbUri){
-  if (typeof dbUri === undefined) {
+function find(coll, params, fields, cursorOptions, cb, dbUri){
+  if (typeof dbUri === 'undefined') {
     dbUri = util.getVar('BS_DB_URI');
   }
   MongoClient.connect(dbUri, function(err, db) {
@@ -30,9 +30,15 @@ function find(coll, params, options, cb, dbUri){
     if (err) {
       return console.log("Error opening database: " + err);
     }
-    db.collection(coll).find(params, options, function(err, cursor){
+    db.collection(coll).find(params, fields, function(err, cursor){
       if (err) {
         return cb(err, null);
+      }
+      if ('sort' in cursorOptions) {
+        cursor = cursor.sort(cursorOptions.sort);
+      }
+      if ('limit' in cursorOptions) {
+        cursor = cursor.limit(cursorOptions.limit);
       }
       return cursor.toArray(cb);
     });
