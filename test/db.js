@@ -4,22 +4,27 @@ var should = require('should');
 var util   = require('../util');
 
 describe('db', function() {
-  before(function(){
-    this.dbUri = util.getVar('TEST_DB_URI');
-  });
+  var dbUri = util.getVar('TEST_DB_URI');
   describe("#insertColl", function(){
+
    it('should be able to insert an empty collection', function(done){
     db.insertColl('testCol', [], function(err, docs){
       should(err).not.be.ok;
       done();
-    }, this.dbUri);
+    }, dbUri);
    });
-   it('should be able to insert some values', function(done){
-    db.insertColl('testCol', [{'a': 'foo', 'b': 'bar'}], function(err, docs){
+
+   it('should be able to insert a value', function(done){
+    var date = new Date();
+    db.insertColl('testCol', [{'date': date}], function(err, docs){
       should(err).not.be.ok;
-      // TODO: Actually perform this check once other DB features are added.
-      done();
-    }, this.dbUri);
+      db.find('testCol', {'date': date}, {}, function(err, docs){
+        should(err).not.be.ok;
+        docs[0].date.should.eql(date);
+        done();
+      }, dbUri);
+    }, dbUri);
    });
+
   });
 });
