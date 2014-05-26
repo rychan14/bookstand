@@ -3,7 +3,7 @@ var getVar      = require('./util.js').getVar;
 var book        = require('./facebook.js');
 var brain       = require('./brain.js');
 var constants   = require('./constants.js');
-var MongoClient = require('mongodb').MongoClient;
+var db          = require('./db.js');
 var fbGroupId   = getVar('TEXTBOOK_GRP_ID');
 var fbToken     = getVar('TEST_TOKEN');
 
@@ -72,19 +72,6 @@ function insertComplete(err, coll, cb){
   }
 }
 
-function insert(coll, data, cb){
-  if (!data.length) return cb(false, coll);
-  MongoClient.connect('mongodb://127.0.0.1:27017/bookstand', function(err, db) {
-    function done(err, docs) {
-      db.close();
-      cb(err, coll);
-    }
-    if (err) {
-      return console.log("Error opening database: " + err);
-    }
-    db.collection(coll).insert(data, done);
-  });
-}
 
 function downloadNewPosts(cb){
   console.log("Downloading new posts");
@@ -109,8 +96,8 @@ function loopFunction(){
     var books         = _.map(posts, getBooksFromPost);
     var postsToInsert = _.map(posts, formatPostForDB);
     var booksToInsert = _.flatten(books);
-    insert('books', books, insertComplete);
-    insert('posts', posts, insertComplete);
+    db.insertColl('books', books, insertComplete);
+    db.insertColl('posts', posts, insertComplete);
   });
 }
 
