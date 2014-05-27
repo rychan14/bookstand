@@ -73,5 +73,19 @@ describe('db', function() {
     }, dbUri);
    });
 
+   it('should be able to insert multiple vals', function(done){
+    var c = Date.now();
+    db.insertColl('testCol', [{'c': c}, {'c': c+1}], function(err, docs){
+      should(err).not.be.ok;
+      db.find('testCol', {'c': {"$gte": c}}, ['c'], {'sort': {'c': 1}}, function(err, docs){
+        should(err).not.be.ok;
+        docs.length.should.eql(2);
+        docs[0].c.should.eql(c);
+        docs[1].c.should.eql(c+1);
+        done();
+      }, dbUri);
+    }, dbUri);
+   });
+
   });
 });

@@ -7,6 +7,10 @@ var db          = require('./db.js');
 var fbGroupId   = getVar('TEXTBOOK_GRP_ID');
 var fbToken     = getVar('TEST_TOKEN');
 
+var POSTS_TO_GET    = 3;
+var QUERY_WAIT_TIME = 60000;
+
+
 function formatPostForDB(post){
   var formattedPost = {
     "id"          : post.id,
@@ -46,15 +50,16 @@ var waiting = ["books", "posts"];
 
 function insertComplete(err, coll, cb){
   if (err) {
-    return console.log("Insertion Error" + err);
-  } else {
-    console.log("Received data for: " + coll);
+    console.log(err);
+    if (err.code != 11000 ) // Duplicate Key Error
+      return;               // TODO: Prevent this case
   }
+  console.log("Received data for: " + coll);
   waiting = _.filter(waiting, function(e){ return e != coll;});
   if (!waiting.length) {
     waiting = ["books", "posts"];
-    console.log("Will query again in 1 minute");
-    setTimeout(loopFunction, 60000);
+    console.log("Will query again in " + QUERY_WAIT_TIME + " ms.");
+    setTimeout(loopFunction, QUERY_WAIT_TIME);
   }
 }
 
@@ -74,7 +79,7 @@ function downloadNewPosts(cb){
     console.log(res);
     posts = _.filter(res.data, function(post){return notFromBookstand(post.message);});
     cb(posts);
-  }, 15);
+  }, POSTS_TO_GET);
 }
 
 function loopFunction(){
@@ -82,8 +87,8 @@ function loopFunction(){
     var books         = _.map(posts, getBooksFromPost);
     var postsToInsert = _.map(posts, formatPostForDB);
     var booksToInsert = _.flatten(books);
-    db.insertColl('books', books, insertComplete);
-    db.insertColl('posts', posts, insertComplete);
+    db.insertColl('books', booksToInsert, insertComplete);
+    db.insertColl('posts', postsToInsert, insertComplete);
   });
 }
 
