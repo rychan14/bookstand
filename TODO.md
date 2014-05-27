@@ -8,8 +8,8 @@ Front End
 
 Back End
 --------
-  - Remote deployment scripts
   - Book Searching
+  - Remote deployment scripts
   - Post Creation
   - Direct Message
   - Post Commenting
