@@ -5,8 +5,6 @@ function insertColl(coll, data, cb, dbUri){
   if (typeof dbUri === 'undefined') {
     dbUri = util.getVar('BS_DB_URI');
   }
-  console.log(typeof data);
-  console.log(data);
   if (!data.length) return cb(false, coll);
   MongoClient.connect(dbUri, function(err, db) {
     function done(err, docs) {

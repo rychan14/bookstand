@@ -33,12 +33,12 @@ describe('facebook', function(){
       }, 0);
     });
 
-    it("should access 99 group posts", function(done){
+    it("should access 99 or 100 group posts", function(done){
       this.timeout(5000); // This could take a while
       book.getGroupPosts(this.fbGroupId, this.fbToken, function(res){
         res.should.be.ok;
         should(res.error).not.ok;
-        res.data.length.should.equal(99);
+        res.data.length.should.be.within(99, 100);
         done();
       }, 100); // 100, why?
     });
