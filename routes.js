@@ -1,6 +1,8 @@
 var util       = require('./util');
 var passport   = require('passport');
 var FbStrategy = require('passport-facebook').Strategy;
+var index  = require('./controllers/index.js');
+var search = require('./controllers/search.js');
 
 var FB_CALLBACK_PATH = "/auth/facebook/callback";
 var FB_APP_ID        = util.getVar("FB_APP_ID");
@@ -19,16 +21,10 @@ passport.use(new FbStrategy({
 passport.serializeUser(function(user, done){done(null, user); });
 passport.deserializeUser(function(obj, done){done(null, obj); });
 
-var controllers = require('./controllers');
 
 module.exports = function(app){
-  app.get('/', function(req, res, next) {
-    controllers.index(req, res, next);
-  });
-
-  app.get('/search', function(req, res, next) {
-    controllers.search(req, res, next);
-  });
+  app.get('/', index);
+  app.get('/search', search);
 
   app.get('/auth/facebook', passport.authenticate('facebook'));
   app.get('/auth/facebook/callback',

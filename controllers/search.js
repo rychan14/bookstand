@@ -1,22 +1,20 @@
+var search          = require('../search.js');
 var util            = require('../util.js');
 var FB_APP_ID       = util.getVar("FB_APP_ID");
 var FB_CALLBACK_URL = util.getVar("SERVER_URL") + '/auth/facebook/callback';
+
 function render(req, res){
-  if (!req.user)
+  //if (!req.user)
+  if (false)
     return res.render('index.html');
   else {
-    var publishLoginUrl = FB.getLoginUrl({
-      appId       : FB_APP_ID ,
-      redirectUri : FB_CALLBACK_URL,
-      scope       : 'publish_actions'
-    });
-    return res.render('home.html', {
-      'accessToken'     : req.user.token,
-      'publishLoginUrl' : publishLoginUrl
+    search.searchBooks(req.query, function(err, results){
+      console.log("RESULTS: " + results);
+      return res.render('search.html', {
+        results: results
+      });
     });
   }
-};
-
-exports = {
-  search: 
 }
+
+module.exports = render;

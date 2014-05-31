@@ -2,7 +2,7 @@ var FB              = require('fb');
 var util            = require('../util.js');
 var FB_APP_ID       = util.getVar("FB_APP_ID");
 var FB_CALLBACK_URL = util.getVar("SERVER_URL") + '/auth/facebook/callback';
-exports.index = function(req, res){
+module.exports = function(req, res){
   if (!req.user)
     return res.render('index.html');
   else {

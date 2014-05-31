@@ -31,6 +31,8 @@ function find(coll, params, fields, cursorOptions, cb, dbUri){
       return console.log("Error opening database: " + err);
     }
     db.collection(coll).find(params, fields, function(err, cursor){
+      console.log("Got response from mongo");
+      console.log(cursor);
       if (err) {
         return cb(err, null);
       }
