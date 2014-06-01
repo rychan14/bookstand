@@ -37,20 +37,20 @@ describe('search', function(){
 
   it("should find a book", function(done) {
    var book = {
-     "author"          : null,
-     "buysell"         : "sell",
-     "courseNumber"    : "BICD 100",
-     "edition"         : null,
-     "isbn"            : null,
-     "price"           : null,
-     "professor"       : null,
-     "title"           : "Genetics: Essential of Genetics",
-     "originalPostId"  : "331733573546962_675731619147154",
-     "originalMessage" : "Selling books: \nBICD 100 Genetics: Essential of Genetics\nBIBC 120 Nutrition: Nutritional Science\nSOCI 1 Introduction to Sociology: Sociology Analysis of the Social World\nand all books for Hum 4.\n\nMessage me for detail and price.",
-     "createdTime"     : new Date("2014-05-27T03:26:59Z"),
-     "updatedTime"     : new Date("2014-05-27T03:26:59Z"),
-     "fromFbId"        : "10152492583703708",
-     "fromName"        : "Maggie Chan" 
+     "author"         : null,
+     "buysell"        : "sell",
+     "courseNumber"   : "BICD 100",
+     "edition"        : null,
+     "isbn"           : null,
+     "price"          : null,
+     "professor"      : null,
+     "title"          : "Genetics: Essential of Genetics",
+     "originalPostId" : "331733573546962_675731619147154",
+     "message"        : "Selling books: \nBICD 100 Genetics: Essential of Genetics\nBIBC 120 Nutrition: Nutritional Science\nSOCI 1 Introduction to Sociology: Sociology Analysis of the Social World\nand all books for Hum 4.\n\nMessage me for detail and price.",
+     "createdTime"    : new Date("2014-05-27T03:26:59Z"),
+     "updatedTime"    : new Date("2014-05-27T03:26:59Z"),
+     "fromFbId"       : "10152492583703708",
+     "fromName"       : "Maggie Chan" 
    };
    db.insertColl('books', [book], function(){
     search.searchBooks({'courseNumber': "BICD 100"}, function(err, books){

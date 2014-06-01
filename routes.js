@@ -3,6 +3,7 @@ var passport   = require('passport');
 var FbStrategy = require('passport-facebook').Strategy;
 var index  = require('./controllers/index.js');
 var search = require('./controllers/search.js');
+var post = require('./controllers/post.js');
 
 var FB_CALLBACK_PATH = "/auth/facebook/callback";
 var FB_APP_ID        = util.getVar("FB_APP_ID");
@@ -26,9 +27,14 @@ module.exports = function(app){
   app.get('/', index);
   app.get('/search', search);
 
+  app.post('/post', post);
   app.get('/auth/facebook', passport.authenticate('facebook'));
   app.get('/auth/facebook/callback',
       passport.authenticate('facebook', {successRedirect: '/', failureRedirect: '/login'}));
+
+  app.get('/make_post', function(req, res){
+    return res.render('make_post.html');
+  });
 
   app.get('/logout', function(req, res){
     req.logout();

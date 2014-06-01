@@ -41,20 +41,20 @@ describe('listener', function(){
         updated_time : '2014-05-26T15:07:02+0000'
       };
       var associated = {
-        author          : undefined,
-        buysell         : 'buy',
-        courseNumber    : 'Math 10A',
-        edition         : undefined,
-        isbn            : undefined,
-        price           : undefined,
-        professor       : undefined,
-        title           : undefined,
-        originalPostId  : '331733573546962_673182472735402',
-        originalMessage : 'Buying: Math 10A/B/C with maple leaf cover',
-        createdTime     : new Date("Fri May 23 2014 09:58:42 GMT-0700 (PDT)"),
-        updatedTime     : new Date("Mon May 26 2014 08:07:02 GMT-0700 (PDT)"),
-        fromFbId        : '10203791314726036',
-        fromName        : 'Laurel Kistler'
+        author         : undefined,
+        buysell        : 'buy',
+        courseNumber   : 'Math 10A',
+        edition        : undefined,
+        isbn           : undefined,
+        price          : undefined,
+        professor      : undefined,
+        title          : undefined,
+        originalPostId : '331733573546962_673182472735402',
+        message        : 'Buying: Math 10A/B/C with maple leaf cover',
+        createdTime    : new Date("Fri May 23 2014 09:58:42 GMT-0700 (PDT)"),
+        updatedTime    : new Date("Mon May 26 2014 08:07:02 GMT-0700 (PDT)"),
+        fromFbId       : '10203791314726036',
+        fromName       : 'Laurel Kistler'
       };
       listener.associateBookWithPost(book, post).should.eql(associated);
     });
@@ -70,20 +70,20 @@ describe('listener', function(){
         updated_time : '2014-05-26T01:28:28+0000'
       };
       var books = [ {
-        author          : 'Fitzpatrick',
-        buysell         : 'buy',
-        courseNumber    : undefined,
-        edition         : '2',
-        isbn            : '9780821847916',
-        price           : undefined,
-        professor       : undefined,
-        title           : 'Advanced Calculus',
-        originalPostId  : '331733573546962_673635419356774',
-        originalMessage : 'BUYING: Advanced Calculus, 2 Edition, 9780821847916 by Fitzpatrick',
-        createdTime     : new Date("Fri May 23 2014 23:46:56 GMT-0700 (PDT)"),
-        updatedTime     : new Date("Sun May 25 2014 18:28:28 GMT-0700 (PDT)"),
-        fromFbId        : '847591698589693',
-        fromName        : 'Trang Tang'
+        author         : 'Fitzpatrick',
+        buysell        : 'buy',
+        courseNumber   : undefined,
+        edition        : '2',
+        isbn           : '9780821847916',
+        price          : undefined,
+        professor      : undefined,
+        title          : 'Advanced Calculus',
+        originalPostId : '331733573546962_673635419356774',
+        message        : 'BUYING: Advanced Calculus, 2 Edition, 9780821847916 by Fitzpatrick',
+        createdTime    : new Date("Fri May 23 2014 23:46:56 GMT-0700 (PDT)"),
+        updatedTime    : new Date("Sun May 25 2014 18:28:28 GMT-0700 (PDT)"),
+        fromFbId       : '847591698589693',
+        fromName       : 'Trang Tang'
       } ];
       listener.getBooksFromPost(post).should.eql(books);
       });

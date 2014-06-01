@@ -19,7 +19,6 @@ function postToGroup(groupId, accessToken, content, callback){
 }
 
 module.exports = {
-  'getGroupPosts': getGroupPosts,
-  'postToGroup': postToGroup
-
+  'getGroupPosts' : getGroupPosts,
+  'postToGroup'   : postToGroup
 };

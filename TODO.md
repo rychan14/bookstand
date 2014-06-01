@@ -8,8 +8,11 @@ Front End
 
 Back End
 --------
-  - Book Searching
-  - Remote deployment scripts
   - Post Creation
+    - Add to FB
+  - Book Searching
+    - "IN" query
+  - Remote deployment scripts
+  - ISBN Lookup
   - Direct Message
   - Post Commenting

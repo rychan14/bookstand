@@ -8,6 +8,7 @@ app.set('view engine', 'mustache');
 app.engine('html', mustache());
 
 app.configure(function(){
+  app.use(express.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({secret: util.getVar('SESSION_SECRET')}));
   app.use(passport.initialize());

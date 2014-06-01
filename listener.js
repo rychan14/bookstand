@@ -24,13 +24,13 @@ function formatPostForDB(post){
 }
 
 function associateBookWithPost(book, post){
-  var b             = book;
-  b.originalPostId  = post.id;
-  b.originalMessage = post.message;
-  b.createdTime     = new Date(post.created_time);
-  b.updatedTime     = new Date(post.updated_time);
-  b.fromFbId        = post.from.id;
-  b.fromName        = post.from.name;
+  var b            = book;
+  b.originalPostId = post.id;
+  b.message        = post.message;
+  b.createdTime    = new Date(post.created_time);
+  b.updatedTime    = new Date(post.updated_time);
+  b.fromFbId       = post.from.id;
+  b.fromName       = post.from.name;
   return b;
 }
 
