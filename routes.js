@@ -1,9 +1,10 @@
 var util       = require('./util');
 var passport   = require('passport');
 var FbStrategy = require('passport-facebook').Strategy;
-var index  = require('./controllers/index.js');
-var search = require('./controllers/search.js');
-var post = require('./controllers/post.js');
+var index   = require('./controllers/index.js');
+var search  = require('./controllers/search.js');
+var post    = require('./controllers/post.js');
+var comment = require('./controllers/comment.js');
 
 var FB_CALLBACK_PATH = "/auth/facebook/callback";
 var FB_APP_ID        = util.getVar("FB_APP_ID");
@@ -28,12 +29,17 @@ module.exports = function(app){
   app.get('/search', search);
 
   app.post('/post', post);
+  app.post('/comment', comment);
   app.get('/auth/facebook', passport.authenticate('facebook'));
   app.get('/auth/facebook/callback',
       passport.authenticate('facebook', {successRedirect: '/', failureRedirect: '/login'}));
 
   app.get('/make_post', function(req, res){
     return res.render('make_post.html');
+  });
+
+  app.get("/comment/:postId", function(req, res){
+    return res.render('comment.html', req.params);
   });
 
   app.get('/logout', function(req, res){

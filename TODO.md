@@ -8,11 +8,8 @@ Front End
 
 Back End
 --------
-  - Post Creation
-    - Add to FB
+  - Better msg generation for FB
   - Book Searching
     - "IN" query
   - Remote deployment scripts
   - ISBN Lookup
-  - Direct Message
-  - Post Commenting

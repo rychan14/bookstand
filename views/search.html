@@ -20,6 +20,9 @@ originalPostId : {{originalPostId}} <br/>
 message        : {{message}} <br/>
 createdTime    : {{createdTime}} <br/>
 updatedTime    : {{updatedTime}} <br/>
-{{/results}}    
+{{#originalPostId}}
+<a href="/comment/{{originalPostId}}">Add Comment to Post</a>
+{{/originalPostId}}
+{{/results}}
 </body>
 </html>

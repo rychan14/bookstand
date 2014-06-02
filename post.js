@@ -12,7 +12,12 @@ function post(user, params, cb){
   console.log("MkPost");
   console.log(params);
   console.log(user);
-  var book = {fromFbId: user.id, fromName: user.displayName};
+  var book = {
+    fromFbId    : user.id,
+    fromName    : user.displayName,
+    createdTime : new Date(),
+    updatedTime : new Date(),
+  };
   DB_BOOK_FIELDS.forEach(function(field){
     if (field in params){
       book[field] = params[field];
@@ -22,10 +27,13 @@ function post(user, params, cb){
   if (params.postToGroup){
     var toPost = book.message + "\n" + BOOKSTAND_SIGNATURE;
     fbook.postToGroup(FB_GROUP_ID, user.token, toPost, function(res){
+      console.log("FB RESULT");
+      console.log(res);
       if (!res || res.error) {
         console.log("Post to FB failed");
         cb(res);
       } else {
+        book.originalPostId = res.id;
         db.insertColl('books', [book], cb);
       }
     });

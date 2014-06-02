@@ -18,7 +18,13 @@ function postToGroup(groupId, accessToken, content, callback){
   FB.api('/' + groupId + '/feed/', 'post', {'message': content}, callback);
 }
 
+function commentOnPost(postId, accessToken, content, callback){
+  FB.setAccessToken(accessToken);
+  FB.api('/' + postId + '/comments/', 'post', {'message': content}, callback);
+}
+
 module.exports = {
   'getGroupPosts' : getGroupPosts,
-  'postToGroup'   : postToGroup
+  'postToGroup'   : postToGroup,
+  'commentOnPost' : commentOnPost
 };
